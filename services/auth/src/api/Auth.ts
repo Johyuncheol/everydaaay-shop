@@ -34,3 +34,17 @@ interface RegisterRequest {
   password: string;
   nickName: string;
 }
+
+export const RegisterAPI = async (user: RegisterRequest) => {
+  console.log(user);
+  try {
+    const res = await axios.post(`${BASE_URL}/auth/register`, user, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    return res;
+  } catch (error) {
+    alert(error);
+  }
+};
