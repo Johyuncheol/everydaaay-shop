@@ -1,0 +1,40 @@
+{
+    "Women": {
+        "mainCategory": "Women",
+        "path":"category/women",
+        "subCategory": [
+            "ALL",
+            "outer",
+            "top",
+            "bottom"
+        ]
+    },
+    "Man": {
+        "mainCategory": "Man",
+        "path":"category/man",
+        "subCategory": [
+            "ALL",
+            "outer",
+            "top",
+            "bottom"
+        ]
+    },
+    "Interior": {
+        "mainCategory": "Interior",
+        "path":"category/interior",
+        "subCategory": [
+            "ALL",
+            "가구",
+            "조명",
+            "페브릭"
+        ]
+    },
+    "Contents": {
+        "mainCategory": "Contents",
+        "path":"contents",
+        "subCategory": [
+            "쇼룸",
+            "크루취향"
+        ]
+    }
+}
