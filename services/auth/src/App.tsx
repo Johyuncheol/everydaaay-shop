@@ -1,8 +1,8 @@
-import React, { Suspense } from "react";
+import React, { Suspense} from "react";
 import { Routes, Route } from "react-router-dom";
 import Globalstyles from "../../../shared/shared/globalStyle/GlobalStyle";
-import LoginPage from "./pages/LoginPage";
-import RegisterPage from "./pages/RegisterPage";
+import LoginPage from "./pages/Login/index"
+import RegisterPage from "./pages/Register/index";
 
 function App() {
   return (

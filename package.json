@@ -6,7 +6,7 @@
   "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "auth": "npm start --workspace seayrvices/auth",
+    "auth": "npm start --workspace services/auth",
     "buy": "npm start --workspace services/buy",
     "category": "npm start --workspace services/category",
     "contents": "npm start --workspace services/contents",
