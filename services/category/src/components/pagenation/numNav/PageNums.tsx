@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 
 interface PageNumsProps {
-  movePageBtnHandler: (type: string) => void; 
+  movePageBtnHandler: (type: string) => void;
   pageNums: number[];
   setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
   currentPage: number;
@@ -12,7 +12,7 @@ const PageNums: React.FC<PageNumsProps> = ({
   movePageBtnHandler,
   pageNums,
   setCurrentPage,
-  currentPage
+  currentPage,
 }) => {
   return (
     <PageNumsSection>
@@ -45,8 +45,8 @@ export default PageNums;
 
 const PageNumsSection = styled.div`
   display: flex;
-
   justify-content: center;
+  align-items:center;
   gap: 1rem;
 
   span {
