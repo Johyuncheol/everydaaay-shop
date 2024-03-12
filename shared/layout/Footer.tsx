@@ -1,37 +1,73 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
+
 const Footer: React.FC = () => {
+   const [isEnd, setIsEnd] = useState(true);
+/*
+  useEffect(() => {
+    const handleScroll = () => {
+      // 현재 스크롤 위치
+      const scrollY = window.scrollY;
+
+      // 전체 문서의 높이
+      const documentHeight = document.documentElement.scrollHeight;
+
+      // 현재 브라우저 창의 높이
+      const windowHeight = window.innerHeight;
+      console.log("scl")
+      // 스크롤이 끝에 도착하면
+      if (scrollY + windowHeight >= documentHeight - 500) {
+        console.log("end")
+        setIsEnd(true);
+      } else {
+        // 스크롤이 끝이 아니면
+        setIsEnd(false);
+      }
+    };
+
+    // 스크롤 이벤트 리스너 등록
+    window.addEventListener("scroll", handleScroll);
+
+    // 컴포넌트 언마운트 시 이벤트 리스너 제거
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+ */
   return (
-    <FooterSection>
+    <FooterSection isEnd={isEnd}>
       <div className="linkBoxs">
         <div className="Box">Contact</div>
         <div className="Box">FAQ</div>
         <div className="Box">Resume</div>
       </div>
       <p>
-        개인 프로젝트로 진행되었으며 <br/>
-        커머스 서비스의 제작시 요구되는점과 <br/>
-        성능 개선을 할수있는 부분등을 학습하기 위해 제작됨 <br/><br/>
+        개인 프로젝트로 진행되었으며 <br />
+        커머스 서비스의 제작시 요구되는점과 <br />
+        성능 개선을 할수있는 부분등을 학습하기 위해 제작됨 <br />
+        <br />
         개발자 : 조현철
-    </p>
+      </p>
     </FooterSection>
   );
 };
 
 export default Footer;
 
-const FooterSection = styled.section`
+const FooterSection = styled.section<{ isEnd: boolean }>`
   margin-top: 6rem;
   padding: 2rem;
   height: 20rem;
   width: 100%;
   background-color: #eae7e7;
 
+  display: ${(props) => (props.isEnd ? "block" : "none")};
+
   .linkBoxs {
     display: flex;
     justify-content: center;
     gap: 5rem;
-    margin-bottom:5rem;
+    margin-bottom: 5rem;
 
     .Box {
       width: 10rem;

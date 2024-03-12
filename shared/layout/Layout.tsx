@@ -1,11 +1,15 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
-import Header from "./Header";
 import styled from "styled-components";
 import Footer from "./Footer";
 import ChannelService from "../ChannelService";
+import Header from "../layout/Header/index";
 
-const Layout: React.FC = () => {
+interface LayputProps {
+  headerType: string;
+}
+
+const Layout: React.FC<LayputProps> = ({ headerType }) => {
   //2. 설치하기
   ChannelService.loadScript();
   //3. 부트하기
@@ -13,24 +17,27 @@ const Layout: React.FC = () => {
     pluginKey: process.env.REACT_APP_CHANNEL_PLUGIN,
   });
   return (
-    <LayoutSection>
-      <Header />
-      <CoverSection>
-        <Outlet />
-      </CoverSection>
+    <>
+      <Header headerType={headerType} />
 
-      <Footer />
-    </LayoutSection>
+      <CoverSection headerType={headerType}>
+        <Outlet />
+        <Footer />
+      </CoverSection>
+    </>
   );
 };
 
 export default Layout;
 
-const LayoutSection = styled.section`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-`;
-const CoverSection = styled.section`
-  margin-top: 100px;
+const CoverSection = styled.section<{ headerType: string }>`
+  padding-top: 100px;
+  @media (min-width: 769px) {
+    width: ${(props) =>
+      props.headerType === "main"
+        ? `calc(max(67%, calc(100% - 300px)))`
+        : "100%"};
+    padding-top: ${(props) => (props.headerType === "main" ? "0" : "100px")};
+    float: right;
+  }
 `;

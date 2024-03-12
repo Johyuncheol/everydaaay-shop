@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import menuData from "../../staticData/json/menuCategory.json";
 import CustomLink from "./CustomLink";
@@ -6,7 +7,7 @@ import CustomLink from "./CustomLink";
 interface MenuModalProps {
   onClose: () => void;
   type: string;
-  position: boolean;
+  position: string;
 }
 
 const MenuModal: React.FC<MenuModalProps> = ({ onClose, type, position }) => {
@@ -38,7 +39,6 @@ const MenuModal: React.FC<MenuModalProps> = ({ onClose, type, position }) => {
             <div className="detailCategory" onClick={onClose} key={index}>
               <CustomLink
                 to={`/${categoryInfo.path + "/" + item.toLowerCase()}`}
-                isLink={servicePath === "category" && type !== "contents"}
               >
                 {item}
               </CustomLink>
@@ -52,12 +52,12 @@ const MenuModal: React.FC<MenuModalProps> = ({ onClose, type, position }) => {
 
 export default MenuModal;
 
-const ModalSection = styled.section<{ position: boolean }>`
+const ModalSection = styled.section<{ position: string }>`
   display: flex;
   position: absolute;
 
   @media (min-width: 769px) {
-    top: ${(props) => (props.position === true ? 0 : "")};
+    top: ${(props) => (props.position === "main" ? 0 : "")};
   }
 
   width: 100%;
