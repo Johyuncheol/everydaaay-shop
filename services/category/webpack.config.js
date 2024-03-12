@@ -58,7 +58,7 @@ module.exports = {
     new CleanWebpackPlugin(),
     
     new HtmlWebpackPlugin({
-      template: "./public/category-index.html", // index.html을 기본 템플릿으로 반영할 수 있도록 설정
+      template: "./public/index.html", // index.html을 기본 템플릿으로 반영할 수 있도록 설정
       filename: "index/index.html", // 생성된 HTML 파일의 이름 및 경로 설정
     }),
 
