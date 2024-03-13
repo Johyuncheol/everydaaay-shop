@@ -1,0 +1,4 @@
+[submodule "shared"]
+	path = shared
+	url = https://github.com/Johyuncheol/everydaaay-shop.git
+	branch = shared
