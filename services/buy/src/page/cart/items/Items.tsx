@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
+interface OptionRequire {
+  [key: string]: string;
+}
+
 interface ItemRequire {
-  size?: string;
-  color?: string;
-  other?: string;
+  option: OptionRequire;
   count: number;
   price: number;
   orderPrice: number;
   id: string;
   imgSrc: string;
-  alt:string;
+  alt: string;
   name: string;
   deliveryFee: number;
   noDeliveryPrice: number;
@@ -62,7 +64,6 @@ const Items: React.FC<ItemsProps> = ({
     });
   };
 
- 
   // 아이템 수량 변경 함수
   const ChangeNumOfItem = ({
     index,
@@ -79,14 +80,17 @@ const Items: React.FC<ItemsProps> = ({
       prev.map((item, prevIndex) => {
         //동작했을때 0개면 동작안하게
         if (item.count + num === 0) return item;
-        //정상동작
-        return prevIndex === index
-          ? {
-              ...item,
-              count: item.count + num,
-              orderPrice: item.orderPrice + item.price * num,
-            }
-          : item;
+
+        //현재인덱스값의 데이터를 찾아서 변경
+        if (prevIndex === index) {
+          const newOrderPrice = item.orderPrice + item.price * num;
+          return {
+            ...item,
+            count: item.count + num,
+            orderPrice: newOrderPrice,
+          };
+        }
+        return item;
       })
     );
   };
@@ -108,6 +112,7 @@ const Items: React.FC<ItemsProps> = ({
       </div>
 
       {data?.map((item, index) => {
+        const optionKeys = Object.keys(item.option);
         return (
           <div className="layout" key={index}>
             <div className="item">
@@ -120,12 +125,17 @@ const Items: React.FC<ItemsProps> = ({
             </div>
 
             <div className="Imgitem">
-              <img src={item.imgSrc} alt={item.alt}/>
+              <img src={item.imgSrc} alt={item.alt} />
               <div>
                 <p>{item.name}</p>
                 <p>
-                  {item.color}
-                  {item.size}
+                  {optionKeys.map((optionKey, index) => {
+                    return (
+                      <div
+                        key={index}
+                      >{`${optionKey}: ${item.option[optionKey]}`}</div>
+                    );
+                  })}
                 </p>
               </div>
             </div>
@@ -224,7 +234,7 @@ const MyBagSection = styled.section`
   }
 
   .del {
-    margin:2rem 0;
+    margin: 2rem 0;
     width: 10rem;
     height: 50px;
     background-color: #e0e0e2;
