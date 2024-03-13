@@ -1,23 +1,18 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useLocation } from "react-router-dom";
-import menuData from "../staticData/json/menuCategory.json";
-import { getCategoryData } from "../api/Category";
-import { useNavigate } from "react-router-dom";
-import { usePagination } from "../hooks/usePageNation";
-import SideBar from "../components/category/Sidebar";
-import Contents from "../components/category/Contents";
-import PageNums from "../components/category/PageNums";
+import menuData from "../../staticData/json/menuCategory.json";
+import SideNav from "./sideNav/SideNav";
+import CategoryPageNation from "./pageNation/CategoryPageNation";
 
 const CategoryPage: React.FC = () => {
-
   const location = useLocation();
-  const navigate = useNavigate();
 
   const info = location.pathname.split("/");
   const categoryName = info.slice(-2)[0];
-  const detail = info.slice(-1)[0];
+  const detail = decodeURIComponent(info.slice(-1)[0]);
   const [selectedMenu, setSelectedMenu] = useState(detail);
+
 
   interface Category {
     mainCategory: string;
@@ -27,58 +22,24 @@ const CategoryPage: React.FC = () => {
 
   const [categoryInfo, setCategoryInfo] = useState<Category>();
 
-  const {
-    showData,
-    pageNums,
-    currentPage,
-    setCurrentPage,
-    movePageBtnHandler,
-    setKey,
-  } = usePagination(
-    () =>
-      getCategoryData(
-        `${categoryName}/${selectedMenu.toLowerCase()}`,
-        currentPage
-      ),
-    20
-  );
-
-  const goDetailPage = (id: number) => {
-    navigate(`detail/${id}`) 
-  };
-
   useEffect(() => {
-    setKey([categoryName, detail, currentPage]);
     if (categoryName === "women") setCategoryInfo(menuData.Women);
     if (categoryName === "man") setCategoryInfo(menuData.Man);
     if (categoryName === "interior") setCategoryInfo(menuData.Interior);
+    setSelectedMenu(detail);
   }, [categoryName, detail]);
-
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [detail]);
 
   return (
     <PageSection>
       {categoryInfo && (
-        <SideBar
+        <SideNav
           categoryInfo={categoryInfo}
           selectedMenu={selectedMenu}
           setSelectedMenu={setSelectedMenu}
-          categoryName={categoryName}
         />
       )}
-      <article className="pageNation">
-        {showData && (
-          <Contents showData={showData} goDetailPage={goDetailPage} />
-        )}
-        <PageNums
-          pageNums={pageNums}
-          setCurrentPage={setCurrentPage}
-          currentPage={currentPage}
-          movePageBtnHandler={movePageBtnHandler}
-        />
-      </article>
+
+      <CategoryPageNation />
     </PageSection>
   );
 };
@@ -115,16 +76,5 @@ const PageSection = styled.section`
         }
       }
     }
-  }
-
-  .contents {
-    display: grid;
-  }
-
-  .pageNation {
-    display: flex;
-    flex-direction: column;
-    gap: 5rem;
-    align-items: center;
   }
 `;
