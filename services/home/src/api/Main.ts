@@ -1,29 +1,21 @@
 import { BASE_URL } from "./const";
-import axios from "axios";
-interface Item {
-  id: number;
-  imgSrc: string;
-}
+import { CacheAxios } from "./CacheAxios";
+import { getSessionStorage } from "../../../../shared/shared/utill/session";
 
-interface MainData {
-  MainBanner: Item[];
-  Popular: Item[];
-  PopularRelated: Item[];
-  Recommend: Item[];
-  RecommendRelated: Item[];
-  Sale: Item[];
-  SaleRelated: Item[];
-}
+export const getMainAPI = async (area: string) => {
+  try {
+    const res = await CacheAxios.get(`${BASE_URL}/main`, {
+      params: { area }, // main 은 현재 3구역으로 나누어져있음 
+    });
 
-export const getMainAPI = async () => {
-  console.log(BASE_URL)
-    try {
-      const res = await axios.get(`${BASE_URL}/main`);
-      console.log(res)
-      return res
-    } catch (error) {
-      console.error("Error fetching main data:", error);
-      throw error; 
+    if (res.status === 201) {
+      return res;
+    } else if (res.status === 304) {
+      console.log("Resource not modified");
+      return getSessionStorage(`${area}Data`);
     }
-  };
-
+  } catch (error) {
+    console.error("메인 데이터를 가져오는 중 오류 발생:", error);
+    throw error;
+  }
+};
