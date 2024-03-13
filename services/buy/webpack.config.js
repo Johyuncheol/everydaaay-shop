@@ -14,7 +14,7 @@ module.exports = {
 
   // 번들된 결과물 설정: 번들된 파일의 이름과 저장 위치를 설정합니다.
   output: {
-    filename: "cart/bundle.js", // 번들 파일 경로 및 이름 설정
+    filename: "buy/bundle.js", // 번들 파일 경로 및 이름 설정
     path: path.resolve(__dirname, "dist"), // 번들 파일이 생성될 경로
     publicPath: "/",
   },
@@ -45,7 +45,7 @@ module.exports = {
             loader: "file-loader",
             options: {
               name: "[name].[ext]", // 결과 파일 이름 설정
-              outputPath: "cart/assets/", // 결과 파일이 저장될 경로 설정
+              outputPath: "buy/assets/", // 결과 파일이 저장될 경로 설정
             },
           },
         ],
