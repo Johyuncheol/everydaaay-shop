@@ -41,8 +41,8 @@ jobs:
       - name: 빌드파일 배포
         run: |
           cd services/buy
-          aws s3 sync dist/buy s3://${{ secrets.AWS_AUTH_BUCKET }}/buy
-          aws s3 sync dist/index s3://${{ secrets.AWS_AUTH_BUCKET }}
+          aws s3 sync dist/buy s3://${{ secrets.AWS_CART_BUCKET }}/buy
+          aws s3 sync dist/index s3://${{ secrets.AWS_CART_BUCKET }}
 
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
