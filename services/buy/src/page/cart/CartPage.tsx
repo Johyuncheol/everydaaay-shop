@@ -1,23 +1,23 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
 import ProcessNav from "./processNav/ProcessNav";
 import NonInCart from "./nonInCart/NonInCart";
 import TotalInfo from "./totalInfo/TotalInfo";
 import Items from "./items/Items";
 
 const CartPage = () => {
+  interface OptionRequire {
+    [key: string]: string;
+  }
 
   interface ItemRequire {
-    size?: string;
-    color?: string;
-    other?: string;
+    option: OptionRequire;
     count: number;
     price: number;
     orderPrice: number;
     id: string;
     imgSrc: string;
-    alt:string;
+    alt: string;
     name: string;
     deliveryFee: number;
     noDeliveryPrice: number;
@@ -47,7 +47,6 @@ const CartPage = () => {
   // 장바구니 데이터 변경시 세션의 데이터도 변경
   useEffect(() => {
     sessionStorage.setItem("shoppingBag", JSON.stringify(data));
-  
   }, [data]);
 
   //선택아이탬 변경시 종합정보 변경
@@ -61,10 +60,11 @@ const CartPage = () => {
         (acc, item) => acc + item.orderPrice,
         0
       );
-      const deliveryFee = selectedItems.reduce(
-        (acc, item) => acc + item.deliveryFee,
-        0
-      );
+      const deliveryFee = selectedItems.reduce((acc, item) => {
+        // 배송비무료 금액이상이면 배송비무료 
+        if (item.orderPrice >= item.noDeliveryPrice) return acc;
+        return acc + item.deliveryFee;
+      }, 0);
 
       const totalPrice = orderPrice + deliveryFee;
       const numOfItems = selectedItems.length;
@@ -109,9 +109,9 @@ export default CartPage;
 
 const CenterWrap = styled.section`
   display: flex;
-  flex-direction:column;
+  flex-direction: column;
   justify-content: center;
-  align-items:center;
+  align-items: center;
 
   .FinishBoxWrap {
     display: flex;
