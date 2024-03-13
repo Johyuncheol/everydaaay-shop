@@ -41,8 +41,8 @@ jobs:
       - name: 빌드파일 배포
         run: |
           cd services/contents
-          aws s3 sync dist/contents s3://${{ secrets.AWS_AUTH_BUCKET }}/contents
-          aws s3 sync dist/index s3://${{ secrets.AWS_AUTH_BUCKET }}
+          aws s3 sync dist/contents s3://${{ secrets.AWS_CONTENTS_BUCKET }}/contents
+          aws s3 sync dist/index s3://${{ secrets.AWS_CONTENTS_BUCKET }}
 
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
