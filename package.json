@@ -12,7 +12,7 @@
     "contents": "npm start --workspace services/contents",
     "detail": "npm start --workspace services/detail",
     "home": "npm start --workspace services/home",
-    "build": "webpack"
+    "build-auth": "cd services/auth && yarn build"
   },
   "workspaces": [
     "shared/*",
