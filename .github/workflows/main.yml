@@ -36,6 +36,7 @@ jobs:
 
       - name: 빌드파일 배포
         run: |
+          cd services/auth
           aws s3 sync dist/auth s3://${{ secrets.AWS_AUTH_BUCKET }}/auth
           aws s3 sync dist/index s3://${{ secrets.AWS_AUTH_BUCKET }}
 
