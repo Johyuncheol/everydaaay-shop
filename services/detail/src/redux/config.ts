@@ -1,8 +1,9 @@
 import { combineReducers } from 'redux';
 import User from './modules/User';
-
+import Setcard from './modules/SelectBox'
+import Modal from './modules/Modal';
 const rootReducer = combineReducers({
-    User 
+    User ,Setcard ,Modal
 });
 
 // 루트 리듀서를 내보내주세요.
