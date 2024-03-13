@@ -22,12 +22,13 @@ jobs:
         run: |
           sudo apt-get install -y awscli
 
-      - name: Fetch all history for 'git diff'
-        run: git fetch --prune --unshallow
-
       - name: Install Dependencies
         run: |
           yarn install
+
+      - name: 서브모듈 가져오기
+        run: |
+          git submodule update --init --recursive
 
       - name: 프로젝트 빌드
         run: |
