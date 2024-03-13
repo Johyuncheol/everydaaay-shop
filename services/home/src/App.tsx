@@ -1,15 +1,16 @@
-import React, { Suspense, useEffect } from "react";
+import React, { Suspense } from "react";
 import { Routes, Route } from "react-router-dom";
-import Globalstyles from "../../../shared/globalStyle/GlobalStyle";
-import MainPage from "./pages/MainPage";
-import Layout2 from "../../../shared/layout/Layout2";
+import Globalstyles from "../../../shared/shared/globalStyle/GlobalStyle";
+import Layout from "../../../shared/shared/layout/Layout";
+
+const MainPage = React.lazy(() => import("./page/mainPage/index"));
 
 function App() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<div style={{height:'100vh'}}>Loading...</div>}>
       <Globalstyles />
       <Routes>
-        <Route path="/" element={<Layout2 />}>
+        <Route path="/" element={<Layout headerType={"main"} />}>
           <Route path="/" element={<MainPage />} />
         </Route>
       </Routes>
