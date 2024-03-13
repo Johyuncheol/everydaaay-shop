@@ -3,7 +3,7 @@ name: Deploy to AWS S3
 on:
   push:
     branches:
-      - auth
+      - contents
 
 jobs:
   deploy:
@@ -32,7 +32,7 @@ jobs:
 
       - name: 프로젝트 빌드
         run: |
-          cd services/auth && yarn build
+          cd services/contents && yarn build
         
         env:
           REACT_APP_BASE_URL: ${{ secrets.REACT_APP_BASE_URL }}
@@ -40,8 +40,8 @@ jobs:
 
       - name: 빌드파일 배포
         run: |
-          cd services/auth
-          aws s3 sync dist/auth s3://${{ secrets.AWS_AUTH_BUCKET }}/auth
+          cd services/contents
+          aws s3 sync dist/contents s3://${{ secrets.AWS_AUTH_BUCKET }}/contents
           aws s3 sync dist/index s3://${{ secrets.AWS_AUTH_BUCKET }}
 
         env:
