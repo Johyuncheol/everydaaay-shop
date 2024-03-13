@@ -10,7 +10,6 @@ export const getShoppingBagAPI = async () => {
 
 export const putInShoppingBagAPI = async (data: string) => {
   try {
-    //data 형태 JSON.parse 로 변형한 타입으로 해야함 string 아님
     const res = await axios.post(`${BASE_URL}/shoppingBag`, data, {
       headers: {
         "Content-Type": "application/json",

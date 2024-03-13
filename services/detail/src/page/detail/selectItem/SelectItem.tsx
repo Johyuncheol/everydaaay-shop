@@ -114,8 +114,9 @@ const ItemSelection: React.FC<{ data: dataRequire }> = ({ data }) => {
       } else {
         /* 중복아닐때 */
         /* 장바구니에 넣을때 필요한 데이터 추가 */
+        const option = { ...selectedOptions };
         const newItem = {
-          ...selectedOptions,
+          option,
           count: 1,
           id: data.id,
           imgSrc: data.imgSrc,
@@ -211,14 +212,12 @@ const ItemSelection: React.FC<{ data: dataRequire }> = ({ data }) => {
             onChange={(e) => handleOptionChange(option.label, e)}
           >
             {index !== 0 &&
-            selectedOptions[data.options[index - 1].label] === undefined 
-            ? (
+            selectedOptions[data.options[index - 1].label] === undefined ? (
               /* 앞선 옵션이 선택되지않았을 때 */
               <option value="">{`${
                 data.options[index - 1].label
               }을 선택해주세요`}</option>
-            ) 
-            : (
+            ) : (
               /* 앞선 옵션이 선택되어있을 때 */
               <>
                 <option value="">Select {option.label}</option>
@@ -238,10 +237,20 @@ const ItemSelection: React.FC<{ data: dataRequire }> = ({ data }) => {
       {
         <div className="items">
           {selectedItems.map((item, index) => {
+            /* 저장아이템 옵션출력 */
+            const optionKeys = item.option ? Object.keys(item.option) : [];
+            console.log(item.option["size"]);
             return (
               <div className="item" key={index}>
-                <span>{item.color}</span>
-                <span>{item.size}</span>
+                {optionKeys.map((optionkey, index) => {
+                  return (
+                    <span
+                      key={index}
+                    >{` ${optionkey}: ${item.option[optionkey]}`}</span>
+                  );
+                })}
+
+                {/* 수량 변경 버튼 */}
                 <div>
                   <button
                     onClick={() =>
@@ -306,7 +315,7 @@ const SelectSection = styled.section`
     border-bottom: 1px solid grey;
     height: 3rem;
     align-items: center;
-    font-size: 0.9rem;
+    font-size: 1rem;
   }
   select {
     width: 100%;
