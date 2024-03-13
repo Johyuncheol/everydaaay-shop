@@ -33,7 +33,7 @@ const OptionalNav: React.FC = () => {
         />
       </button>
 
-      <CustomLink to="/cart">
+      <CustomLink to="/buy/cart">
         <img
           src="https://cdn.pixabay.com/photo/2013/07/12/14/53/cart-148964_1280.png"
           alt="cart"
