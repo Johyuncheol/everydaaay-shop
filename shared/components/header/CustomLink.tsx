@@ -5,23 +5,28 @@ import { useLocation } from "react-router-dom";
 interface ConditionalLinkProps {
   to: string;
   children: React.ReactNode;
-  mouseOverFunc?:() => void;
-  onClickFunc?:() => void;
+  mouseOverFunc?: () => void;
+  onClickFunc?: () => void;
 }
 
 const ConditionalLink: React.FC<ConditionalLinkProps> = ({
   to,
   children,
-  mouseOverFunc
+  mouseOverFunc,
 }) => {
-  const {pathname}=useLocation();
-  const serviceInitial = pathname.split('/')[1]
-  const isLink = to.split('/').includes(serviceInitial)
-  
+  const { pathname } = useLocation();
+  const serviceInitial = pathname.split("/")[1];
+  const toServiceName = to.split("/").shift();
+  const isLink = toServiceName ? toServiceName.includes(serviceInitial) : false;
+
   return isLink ? (
-    <Link to={to} onMouseOver={mouseOverFunc}>{children}</Link>
+    <Link to={to} onMouseOver={mouseOverFunc}>
+      {children}
+    </Link>
   ) : (
-    <a href={to} onMouseOver={mouseOverFunc}>{children}</a>
+    <a href={to} onMouseOver={mouseOverFunc}>
+      {children}
+    </a>
   );
 };
 
