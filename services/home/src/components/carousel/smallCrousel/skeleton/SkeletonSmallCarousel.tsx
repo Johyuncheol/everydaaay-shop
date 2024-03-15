@@ -8,6 +8,6 @@ const SkeletonSmallCarousel: React.FC = () => {
 export default SkeletonSmallCarousel;
 const CarouselSection = styled.section`
   width: 100%;
-  aspect-ratio: 2/0.5;
+  aspect-ratio: 2/1;
   background-color: #f0f0f0; /* 스켈레톤 UI 배경색 */
 `;

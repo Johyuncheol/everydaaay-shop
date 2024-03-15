@@ -4,7 +4,7 @@ import MainCarousel from "../../../components/carousel/largeCarosel/index";
 
 import FigureLinkBox from "../../../components/FigureLinkBox/FigureLinkBox";
 import { getMainAPI } from "../../../api/Main";
-import SkeletonHalfCarousel from "./skeleton/SkeletonFirstArea";
+import SkeletonFirstArea from "./skeleton/SkeletonFirstArea";
 
 
 interface mainBannerItem {
@@ -51,7 +51,7 @@ const FirstArea: React.FC = () => {
           </ItemBox1>
         </ItemSection>
       ) : (
-        <SkeletonHalfCarousel />
+        <SkeletonFirstArea />
       )}
     </>
   );

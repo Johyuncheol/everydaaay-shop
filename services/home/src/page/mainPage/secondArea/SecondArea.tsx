@@ -4,7 +4,7 @@ import { getMainAPI } from "../../../api/Main";
 import { FetchIntersectionObserver } from "../../../utill/useIntersectionObserver";
 import SmallCrousel from "../../../components/carousel/smallCrousel/index";
 import CarouselHeader from "../../../components/carousel/elements/header/CarouselHeader";
-import SkeletonThirdArea from "../thirdArea/skeleton/SkeletonThirdArea";
+import SkeletionSecondArea from "./skeleton/SkeletionSecondArea";
 interface Item1 {
   id: number;
   imgSrc: string;
@@ -49,7 +49,7 @@ const SecondArea: React.FC = () => {
           );
         })
       ) : (
-        <SkeletonThirdArea />
+        <SkeletionSecondArea />
       )}
     </ItemBox>
   );
