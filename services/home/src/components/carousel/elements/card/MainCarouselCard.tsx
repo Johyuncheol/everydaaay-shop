@@ -28,6 +28,8 @@ const CardArticle = styled.article<{ ratio: string }>`
   background-color: #d9d9d9;
   position: relative;
   background-color: red;
+  height:100%;
+  aspect-ratio: ${(props) => props.ratio}; // 이게 카드 비율 결정
 
   .detail {
     position: absolute;
@@ -38,7 +40,6 @@ const CardArticle = styled.article<{ ratio: string }>`
     font-size: 2rem;
   }
 
-  aspect-ratio: ${(props) => props.ratio}; // 이게 카드 비율 결정
   img {
     width: 100%;
     object-fit: cover;

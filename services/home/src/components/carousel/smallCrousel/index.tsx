@@ -22,7 +22,6 @@ const SmallCarousel: React.FC<{ adata: Item[] }> = ({ adata }) => {
       width={"100%"}
       layerRatio={"2/1"}
       cardRatio={"1/2"}
-      gap={"1rem"}
       maxHeight={"400px"}
     />
   );
