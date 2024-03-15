@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import styled from "styled-components";
 import { useCarosel } from "../hooks/useCarousel";
 
@@ -23,11 +23,11 @@ interface CarouselOutLayerProps {
 interface CarouselLocationProps {
   currentIndex: number;
   totalNums: number;
-  setCurrentIndex:React.Dispatch<React.SetStateAction<number>>;
+  setCurrentIndex: React.Dispatch<React.SetStateAction<number>>;
 }
 
 interface CarouselFrameProps<T> {
-  CarouselCard: React.FC<CarouselCardProps<T>>;
+  CarouselCard: React.FC<CarouselCardProps<T>>; // * height는 100%로 설정할 것 아이폰이 aspectRatio 기준이 세로
   CarouselBtn?: React.FC<CarouselBtnProps>;
   CarouselOutLayer: React.FC<CarouselOutLayerProps>;
   CarouselIndecator?: React.FC<CarouselLocationProps>;
@@ -40,40 +40,75 @@ interface CarouselFrameProps<T> {
   maxWidth?: string;
 }
 
-
 // 캐러셸 부품만 전달해주면 되도록 생성
 export const CarouselFrame: <T extends {}>(
   props: CarouselFrameProps<T>
 ) => React.ReactNode = ({
   CarouselCard, //캐러셸 내부 카드의 형태
-  CarouselBtn, // 캐러셸 이동 버튼 
+  CarouselBtn, // 캐러셸 이동 버튼
   CarouselOutLayer, // 캐러셸 전체(전체크기, 테두리등)
   CarouselIndecator, // 몇번째케러셸인지 표시
   adata, // usePageNation훅으로 가져오는 데이터
   width, // 캐러셸 전제 width
   layerRatio, //캐러셸 전체 비율
-  cardRatio, // 캐러셸 내부 비율 
-  gap = "", // 카드간 간격
+  cardRatio, // 캐러셸 내부 비율
   maxHeight = "", //캐러셸 전체 최대높이
   maxWidth = "", //캐러셸 전체 최대 넓이
 }) => {
-  const { handlePrevClick, handleNextClick, currentIndex, setCurrentIndex } = useCarosel({
-    adata,
-  });
+  const { handlePrevClick, handleNextClick, currentIndex, setCurrentIndex } =
+    useCarosel({
+      adata,
+    });
+
+  const innerRef = useRef<HTMLDivElement>(null); // 카드들이 가로로 나열되는 곳
+  const cardRef = useRef<HTMLDivElement>(null); // 카드 한장
+
+  // currentIndex가 변경되면 useRef로 width 가져와 캐러셸을 이동시킴
+  //       <- styled에서 이동하는 정도를 %로 두니 아이폰에서 인식못함
+  // 이동하는 크기가 %단위가 아닌 고정값이 되면서 화면크기 변경시 리사이징 해줘야함
+  useEffect(() => {
+    //캐러셸 이동
+    if (innerRef.current && cardRef.current) {
+      innerRef.current.style.transition = "transform 0.3s ease-in-out";
+      innerRef.current.style.transform = `translateX(-${
+        currentIndex * cardRef.current.clientWidth
+      }px)`;
+    }
+
+    // 리사이징
+    const handleResize = () => {
+      if (innerRef.current && cardRef.current) {
+        innerRef.current.style.transition = "";
+        innerRef.current.style.transform = `translateX(-${
+          currentIndex * cardRef.current.clientWidth
+        }px)`;
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [currentIndex]);
 
   return (
-    <div>
+    <CarouselSection>
       <CarouselOutLayer
         width={width}
         ratio={layerRatio}
         maxHeight={maxHeight}
         maxWidth={maxWidth}
       >
-        <Inner currentIndex={currentIndex} length={adata.length} gap={gap}>
+        <div className="inner" ref={innerRef}>
           {adata?.map((item, index) => {
-            return <CarouselCard item={item} index={index} ratio={cardRatio} />;
+            return (
+              <div className="cardArticle" ref={cardRef}>
+                <CarouselCard item={item} index={index} ratio={cardRatio} />
+              </div>
+            );
           })}
-        </Inner>
+        </div>
 
         {CarouselBtn && (
           <CarouselBtn
@@ -90,20 +125,17 @@ export const CarouselFrame: <T extends {}>(
           setCurrentIndex={setCurrentIndex}
         />
       )}
-    </div>
+    </CarouselSection>
   );
 };
 
-
-const Inner = styled.div<{
-  currentIndex: number;
-  length: number;
-  gap: string;
-}>`
-  display: flex;
-  gap: ${(props) => props.gap};
-  transition: transform 0.3s ease-in-out;
-  transform: translateX(
-    -${(props) => (props.currentIndex * 100) / props.length}%
-  );
+const CarouselSection = styled.div`
+  .inner {
+    display: flex;
+    height: 100%;
+  }
+  .cardArticle {
+    display: flex;
+    height: 100%;
+  }
 `;
