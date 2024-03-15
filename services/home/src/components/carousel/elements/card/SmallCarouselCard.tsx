@@ -38,9 +38,11 @@ const Card = styled.div<{ ratio: string }>`
   flex-direction: column;
   justify-content: center;
 
+  height:100%;
   aspect-ratio: ${(props) => props.ratio};
   flex-shrink: 0;
   box-shadow: 10px 5px 5px #2c2e2d11;
+  padding-left:1rem;
 
   img {
     width: 100%;
