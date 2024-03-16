@@ -167,7 +167,7 @@ const ItemSelection: React.FC<{ data: dataRequire }> = ({ data }) => {
   /* 장바구니에 담기 버튼 클릭시 */
   const AddToShoppingBag = () => {
     /* 로그인 안되어있으먄 로그인 창으로 */
-    if (userInfo.name === null) return (window.location.href = "/auth/login");
+    if (userInfo.name === null) return (window.location.href = "https://auth.everydaaay.com/auth/login");
 
     /* 고른게 없을 떄 */
     if (selectedItems.length === 0) return;
