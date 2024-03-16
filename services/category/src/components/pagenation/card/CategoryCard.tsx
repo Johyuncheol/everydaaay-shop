@@ -17,7 +17,7 @@ interface CategoryCardProps {
 
 const CategoryCard: React.FC<CategoryCardProps> = ({ index, item }) => {
   const goDetailPage = (id: number) => {
-    window.location.href = `/detail/${id}`;
+    window.location.href = `https://detail.everydaaay.com/detail/${id}`;
   };
 
   return (
