@@ -143,7 +143,7 @@ const CartPage = () => {
     <CenterWrap>
       <ProcessNav />
       <div className="itemSection">
-        {data.length !== 0 ? ( // 로딩이 완료되고 데이터가 있는 경우
+        {data.length !== 0 && !isLoading ? ( // 로딩이 완료되고 데이터가 있는 경우
           <>
             <Items
               data={data}
