@@ -58,17 +58,22 @@ const CartPage = () => {
     setIsLoading(true); // 로딩 상태를 true로 설정
 
     const shoppingBagData = await getShoppingBagAPI();
-    
-    const shoppingBag_sesstion = getSessionStorage("shoppingBag");
 
     // 최신 데이터를 새로 받았다면 세션에 업데이트
     if (shoppingBagData) addSessionStorage("shoppingBag", shoppingBagData);
+
+    const shoppingBag_sesstion = getSessionStorage("shoppingBag");
 
     setData(shoppingBag_sesstion ?? "[]");
     setFirstData(shoppingBag_sesstion ?? "[]");
 
     setIsLoading(false); // 로딩 상태를 false로 설정 (로딩 완료)
   };
+
+
+  useEffect(()=>{
+
+  },[])
 
   useEffect(() => {
     GetBagData();
