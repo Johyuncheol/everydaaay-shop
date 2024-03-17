@@ -4,6 +4,11 @@ import ProcessNav from "./processNav/ProcessNav";
 import NonInCart from "./nonInCart/NonInCart";
 import TotalInfo from "./totalInfo/TotalInfo";
 import Items from "./items/Items";
+import { getShoppingBagAPI, putInShoppingBagAPI } from "../../api/ShoppingBag";
+import {
+  addSessionStorage,
+  getSessionStorage,
+} from "../../../../../shared/shared/utill/session";
 
 const CartPage = () => {
   interface OptionRequire {
@@ -23,9 +28,14 @@ const CartPage = () => {
     noDeliveryPrice: number;
   }
 
+  // 장바구니 데이터
   const [data, setData] = useState<ItemRequire[]>([]);
+  // 초기값 , 장바구니 데이터가 변경되었는지 확인용
+  const [firstData, setFirstData] = useState<ItemRequire[]>([]);
+  //선택아이탬
   const [checkedItem, setCheckedItem] = useState<boolean[]>([]);
-
+  // 장바구니 데이터 변경 여부
+  const [isChange, setIsChange] = useState(false);
   // 종합정보
   const [payInfo, setPayInfo] = useState({
     orderPrice: 0,
@@ -34,19 +44,57 @@ const CartPage = () => {
     totalPrice: 0,
   });
 
-  //세션스토리지에서 데이터가져오기
+  //장바구니 데이터 가져오기
   const GetBagData = async () => {
-    const shoppingBagData = sessionStorage.getItem("shoppingBag");
-    setData(JSON.parse(shoppingBagData ?? "[]"));
+    const shoppingBagData = await getShoppingBagAPI();
+
+    addSessionStorage("shoppingBag", shoppingBagData);
+
+    const shoppingBag_sesstion = getSessionStorage("shoppingBag");
+    setData(shoppingBag_sesstion ?? "[]");
+    setFirstData(shoppingBag_sesstion ?? "[]");
   };
 
   useEffect(() => {
     GetBagData();
   }, []);
 
+  // 페이지가언로드, 컴포넌트가 언마운트 될 때 세션의 정보를 서버에 저장요청 보냄
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      //장바구니 데이터가 변경이 없으면
+      if (!isChange) return;
+
+      //변경있으면 서버로 업데이트
+      const newData = getSessionStorage("shoppingBag");
+      putInShoppingBagAPI(newData);
+    };
+
+    if (isChange) {
+      console.log("이벤트 등록");
+      window.addEventListener("beforeunload", handleBeforeUnload);
+    }
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [isChange]);
+
+  useEffect(() => {
+    // 변경된 정보가 있는지 확인, 객체라 순서때문에 반복문사용
+    for (let i = 0; i < data.length; i++) {
+      // 다를 때
+      if (JSON.stringify(data[i]) !== JSON.stringify(firstData[i])) {
+        setIsChange(true); // 변경이 있으면 isChange 상태를 true로 업데이트
+        return;
+      }
+    }
+    setIsChange(false); // 변경이 없으면 isChange 상태를 false로 업데이트
+  }, [data]);
+
   // 장바구니 데이터 변경시 세션의 데이터도 변경
   useEffect(() => {
-    sessionStorage.setItem("shoppingBag", JSON.stringify(data));
+    addSessionStorage("shoppingBag", data);
   }, [data]);
 
   //선택아이탬 변경시 종합정보 변경
@@ -61,7 +109,7 @@ const CartPage = () => {
         0
       );
       const deliveryFee = selectedItems.reduce((acc, item) => {
-        // 배송비무료 금액이상이면 배송비무료 
+        // 배송비무료 금액이상이면 배송비무료
         if (item.orderPrice >= item.noDeliveryPrice) return acc;
         return acc + item.deliveryFee;
       }, 0);
@@ -82,7 +130,7 @@ const CartPage = () => {
     <CenterWrap>
       <ProcessNav />
       <div className="itemSection">
-        {data !== null && data.length !== 0 ? (
+        {data.length !== 0 ? (
           <>
             <Items
               data={data}
