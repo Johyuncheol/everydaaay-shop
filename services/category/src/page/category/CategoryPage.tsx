@@ -22,6 +22,7 @@ const CategoryPage: React.FC = () => {
 
   const [categoryInfo, setCategoryInfo] = useState<Category>();
 
+  // 사이드 네비게이션에 데이터 설정
   useEffect(() => {
     if (categoryName === "women") setCategoryInfo(menuData.Women);
     if (categoryName === "man") setCategoryInfo(menuData.Man);
