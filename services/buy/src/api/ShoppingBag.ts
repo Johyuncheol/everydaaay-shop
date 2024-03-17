@@ -1,8 +1,9 @@
 import { BASE_URL } from "./const";
 import axios from "axios";
+import { CacheAxios } from "./CacheAxios";
 
 export const getShoppingBagAPI = async () => {
-  const res = await axios.get(`${BASE_URL}/shoppingBag`, {
+  const res = await CacheAxios.get(`${BASE_URL}/shoppingBag`, {
     withCredentials: true,
   });
 

@@ -39,7 +39,7 @@ const CartPage = () => {
   const [isChange, setIsChange] = useState(false);
 
   // 데이터 로딩 상태를 나타내는 변수
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   // 종합정보
   const [payInfo, setPayInfo] = useState({
     orderPrice: 0,
@@ -48,15 +48,22 @@ const CartPage = () => {
     totalPrice: 0,
   });
 
+  // 장바구니 데이터 변경시 세션의 데이터도 변경
+  useEffect(() => {
+    data.length !== 0 && addSessionStorage("shoppingBag", data);
+  }, [data]);
+
   // 장바구니 데이터 가져오기
   const GetBagData = async () => {
     setIsLoading(true); // 로딩 상태를 true로 설정
 
     const shoppingBagData = await getShoppingBagAPI();
-
-    addSessionStorage("shoppingBag", shoppingBagData);
-
+    
     const shoppingBag_sesstion = getSessionStorage("shoppingBag");
+
+    // 최신 데이터를 새로 받았다면 세션에 업데이트
+    if (shoppingBagData) addSessionStorage("shoppingBag", shoppingBagData);
+
     setData(shoppingBag_sesstion ?? "[]");
     setFirstData(shoppingBag_sesstion ?? "[]");
 
@@ -100,11 +107,6 @@ const CartPage = () => {
     setIsChange(false); // 변경이 없으면 isChange 상태를 false로 업데이트
   }, [data]);
 
-  // 장바구니 데이터 변경시 세션의 데이터도 변경
-  useEffect(() => {
-    addSessionStorage("shoppingBag", data);
-  }, [data]);
-
   //선택아이탬 변경시 종합정보 변경
   useEffect(() => {
     setPayInfo(() => {
@@ -134,13 +136,14 @@ const CartPage = () => {
     });
   }, [checkedItem, data]);
 
+  //데이터 비동기 처리 중일때
+  if (isLoading) return <LoadingPage />;
+
   return (
     <CenterWrap>
       <ProcessNav />
       <div className="itemSection">
-        {isLoading ? ( // 로딩 중인 경우
-          <LoadingPage />
-        ) : data.length !== 0 ? ( // 로딩이 완료되고 데이터가 있는 경우
+        {data.length !== 0 ? ( // 로딩이 완료되고 데이터가 있는 경우
           <>
             <Items
               data={data}
