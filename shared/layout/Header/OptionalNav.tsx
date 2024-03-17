@@ -4,21 +4,23 @@ import SearchModalCard from "../../components/header/SearchModalCard";
 import CustomLink from "../../components/header/CustomLink";
 import { LogoutAPI } from "../../api/Auth";
 import styled from "styled-components";
-import { getSessionStorage } from "../../utill/session";
+import { getCookie,deleteCookie } from "../../utill/cookie";
 
 const OptionalNav: React.FC = () => {
   const searchModal = useModal({ isOpen: false });
-  const [user, setUser] = useState({ name: null });
+  const [user, setUser] = useState<string | null>(null);
 
   useEffect(() => {
-    const userInfo = getSessionStorage("userInfo");
-    if (userInfo) {
-      setUser(userInfo.name);
-    }
+    const userName = getCookie("name");
+    setUser(userName);
   }, []);
 
-  const Logout = () => {
-    LogoutAPI();
+  const Logout = async() => {
+    await LogoutAPI();
+    await deleteCookie('name')
+
+    const userName = getCookie("name");
+    setUser(userName);
   };
 
   return (
@@ -41,7 +43,7 @@ const OptionalNav: React.FC = () => {
       </CustomLink>
 
       <CustomLink to="">♥</CustomLink>
-      {user.name !==null ? (
+      {user !== null ? (
         <a onClick={Logout}>LO</a>
       ) : (
         <CustomLink to="/auth/login">

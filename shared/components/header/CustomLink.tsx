@@ -19,7 +19,7 @@ const ConditionalLink: React.FC<ConditionalLinkProps> = ({
   const nowService= pathname.split('/')[1];
   const toService= to.split('/')[1]
   const isLink = nowService===toService;
-  const toHref = `https://${toService}.everydaaay.com${to}`
+  const toHref = `https://${toService ? toService+'.' : ''}everydaaay.com${to}`
   
   return isLink ? (
     <Link to={to} onMouseOver={mouseOverFunc}>{children}</Link>
