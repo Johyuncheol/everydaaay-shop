@@ -1,9 +1,10 @@
 import { BASE_URL } from "./const";
-import axios from "axios";
+import { CacheAxios } from "./CacheAxios";
+
 
 export const getDetail = async (id: string) => {
   try {
-    const res = await axios.get(`${BASE_URL}/detail?id=${id}`);
+    const res = await CacheAxios.get(`${BASE_URL}/detail?id=${id}`);
     return res.data.data;
   } catch (error) {
     console.error("Error fetching main data:", error);
@@ -13,7 +14,7 @@ export const getDetail = async (id: string) => {
 
 export const getAsk = async (id: string, page: number, numOfShow: number) => {
   try {
-    const res = await axios.get(
+    const res = await CacheAxios.get(
       `${BASE_URL}/detail/ask?id=${id}&page=${page}&numOfShow=${numOfShow}`
     );
     return res;
@@ -29,7 +30,7 @@ export const getReview = async (
   numOfShow: number
 ) => {
   try {
-    const res = await axios.get(
+    const res = await CacheAxios.get(
       `${BASE_URL}/detail/review?id=${id}&page=${page}&numOfShow=${numOfShow}`
     );
     return res;
