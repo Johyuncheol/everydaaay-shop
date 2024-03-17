@@ -1,5 +1,5 @@
 import { BASE_URL } from "./const";
-import axios from "axios";
+import { CacheAxios } from "./CacheAxios";
 
 export const getCategoryData = async (
   path: string,
@@ -7,8 +7,10 @@ export const getCategoryData = async (
   numOfShow: number
 ) => {
   try {
-    const res = await axios.get(
-      `${BASE_URL}/category/${path}?page=${page}&numOfShow=${numOfShow}`
+    const res = await CacheAxios.get(
+      `${BASE_URL}/category/${path}?page=${page}&numOfShow=${numOfShow}`,{
+        params: { path,page }, 
+      }
     );
 
     return res;

@@ -20,15 +20,20 @@ const CategoryPageNation: React.FC = () => {
 
   const pagenationRef = useRef(null);
 
+  //한번에 가져오는 페이지네이션 데이터수 
   const nunOfShow = 20;
+
+  // 카테고리/세부카테고리
   const path = `${categoryName}/${detail.toLowerCase()}`;
 
+  // 페이지네이션 훅 
   const paginationResult = usePagination<itemsRequire>(
     getCategoryData,
     path,
     nunOfShow
   );
 
+  // 메모리 캐싱에서 사용할 키값 
   useEffect(() => {
     paginationResult.setKey([
       categoryName,
