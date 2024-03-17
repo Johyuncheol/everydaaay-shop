@@ -6,6 +6,7 @@ import PageNumNav from "../../../components/pagenation/pageNumNav/PageNumNav";
 import { usePagination } from "../../../../../../shared/shared/hooks/usePageNation";
 import { ShowDataComponent } from "../../../../../../shared/shared/lib/MyPageNation";
 import { PageNumNavComponent } from "../../../../../../shared/shared/lib/MyPageNation";
+import NonItemCard from "../../../components/pagenation/card/NonItemCard";
 
 /* 리뷰 요청결과 데이터 타입 */
 interface reviewRequire {
@@ -34,23 +35,26 @@ const ReviewPageNation: React.FC<{ productID: string }> = ({ productID }) => {
   return (
     /* 페이지네이션 Outlayer 레이아웃 */
     <PagenationHeader title={"리뷰"}>
+      {paginationResult.showData.length ? (
+        <>
+          {/* 페이지네이션 반복되는 카드 구역 */}
+          <ShowDataComponent
+            showData={paginationResult.showData}
+            renderCard={ReviewCard}
+          />
 
-
-        {/* 페이지네이션 반복되는 카드 구역 */}
-        <ShowDataComponent
-          showData={paginationResult.showData}
-          renderCard={ReviewCard}
-        />
-
-        {/* 페이지네이션 숫자 네비게이터 구역 */}
-        <PageNumNavComponent
-          pageNums={paginationResult.pageNums}
-          currentPage={paginationResult.currentPage}
-          setCurrentPage={paginationResult.setCurrentPage}
-          movePageBtnHandler={paginationResult.movePageBtnHandler}
-          pageNumNav={PageNumNav}
-        />
-
+          {/* 페이지네이션 숫자 네비게이터 구역 */}
+          <PageNumNavComponent
+            pageNums={paginationResult.pageNums}
+            currentPage={paginationResult.currentPage}
+            setCurrentPage={paginationResult.setCurrentPage}
+            movePageBtnHandler={paginationResult.movePageBtnHandler}
+            pageNumNav={PageNumNav}
+          />
+        </>
+      ) : (
+        <NonItemCard type="리뷰" />
+      )}
     </PagenationHeader>
   );
 };
