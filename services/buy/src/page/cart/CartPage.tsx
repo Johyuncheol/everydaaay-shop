@@ -4,6 +4,12 @@ import ProcessNav from "./processNav/ProcessNav";
 import NonInCart from "./nonInCart/NonInCart";
 import TotalInfo from "./totalInfo/TotalInfo";
 import Items from "./items/Items";
+import { getShoppingBagAPI, putInShoppingBagAPI } from "../../api/ShoppingBag";
+import {
+  addSessionStorage,
+  getSessionStorage,
+} from "../../../../../shared/shared/utill/session";
+import LoadingPage from "../../../../../shared/shared/page/Spinner";
 
 const CartPage = () => {
   interface OptionRequire {
@@ -23,9 +29,17 @@ const CartPage = () => {
     noDeliveryPrice: number;
   }
 
+  // 장바구니 데이터
   const [data, setData] = useState<ItemRequire[]>([]);
+  // 초기값 , 장바구니 데이터가 변경되었는지 확인용
+  const [firstData, setFirstData] = useState<ItemRequire[]>([]);
+  //선택아이탬
   const [checkedItem, setCheckedItem] = useState<boolean[]>([]);
+  // 장바구니 데이터 변경 여부
+  const [isChange, setIsChange] = useState(false);
 
+  // 데이터 로딩 상태를 나타내는 변수
+  const [isLoading, setIsLoading] = useState(false);
   // 종합정보
   const [payInfo, setPayInfo] = useState({
     orderPrice: 0,
@@ -34,19 +48,68 @@ const CartPage = () => {
     totalPrice: 0,
   });
 
-  //세션스토리지에서 데이터가져오기
+  // 장바구니 데이터 변경시 세션의 데이터도 변경
+  useEffect(() => {
+    data.length !== 0 && addSessionStorage("shoppingBag", data);
+  }, [data]);
+
+  // 장바구니 데이터 가져오기
   const GetBagData = async () => {
-    const shoppingBagData = sessionStorage.getItem("shoppingBag");
-    setData(JSON.parse(shoppingBagData ?? "[]"));
+    setIsLoading(true); // 로딩 상태를 true로 설정
+
+    const shoppingBagData = await getShoppingBagAPI();
+
+    // 최신 데이터를 새로 받았다면 세션에 업데이트
+    if (shoppingBagData) addSessionStorage("shoppingBag", shoppingBagData);
+
+    const shoppingBag_sesstion = getSessionStorage("shoppingBag");
+
+    setData(shoppingBag_sesstion ?? "[]");
+    setFirstData(shoppingBag_sesstion ?? "[]");
+
+    setIsLoading(false); // 로딩 상태를 false로 설정 (로딩 완료)
   };
+
+
+  useEffect(()=>{
+
+  },[])
 
   useEffect(() => {
     GetBagData();
   }, []);
 
-  // 장바구니 데이터 변경시 세션의 데이터도 변경
+  // 페이지가언로드, 컴포넌트가 언마운트 될 때 세션의 정보를 서버에 저장요청 보냄
   useEffect(() => {
-    sessionStorage.setItem("shoppingBag", JSON.stringify(data));
+    const handleBeforeUnload = () => {
+      //장바구니 데이터가 변경이 없으면
+      if (!isChange) return;
+
+      //변경있으면 서버로 업데이트
+      const newData = getSessionStorage("shoppingBag");
+      putInShoppingBagAPI(newData);
+    };
+
+    if (isChange) {
+      console.log("이벤트 등록");
+      window.addEventListener("beforeunload", handleBeforeUnload);
+    }
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [isChange]);
+
+  useEffect(() => {
+    // 변경된 정보가 있는지 확인, 객체라 순서때문에 반복문사용
+    for (let i = 0; i < data.length; i++) {
+      // 다를 때
+      if (JSON.stringify(data[i]) !== JSON.stringify(firstData[i])) {
+        setIsChange(true); // 변경이 있으면 isChange 상태를 true로 업데이트
+        return;
+      }
+    }
+    setIsChange(false); // 변경이 없으면 isChange 상태를 false로 업데이트
   }, [data]);
 
   //선택아이탬 변경시 종합정보 변경
@@ -61,7 +124,7 @@ const CartPage = () => {
         0
       );
       const deliveryFee = selectedItems.reduce((acc, item) => {
-        // 배송비무료 금액이상이면 배송비무료 
+        // 배송비무료 금액이상이면 배송비무료
         if (item.orderPrice >= item.noDeliveryPrice) return acc;
         return acc + item.deliveryFee;
       }, 0);
@@ -78,11 +141,14 @@ const CartPage = () => {
     });
   }, [checkedItem, data]);
 
+  //데이터 비동기 처리 중일때
+  if (isLoading) return <LoadingPage />;
+
   return (
     <CenterWrap>
       <ProcessNav />
       <div className="itemSection">
-        {data !== null && data.length !== 0 ? (
+        {data.length !== 0 && !isLoading ? ( // 로딩이 완료되고 데이터가 있는 경우
           <>
             <Items
               data={data}
@@ -91,13 +157,13 @@ const CartPage = () => {
               checkedItem={checkedItem}
             />
             <TotalInfo payInfo={payInfo} />
-
             <div className="FinishBoxWrap">
               <button className="menuItem">쇼핑 계속하기</button>
               <button className="menuItem">결제하기</button>
             </div>
           </>
         ) : (
+          // 로딩이 완료되고 데이터가 없는 경우
           <NonInCart />
         )}
       </div>
