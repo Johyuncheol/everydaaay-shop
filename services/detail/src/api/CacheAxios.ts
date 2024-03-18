@@ -33,7 +33,7 @@ CacheAxios.interceptors.request.use(
 
     // 타임스탬프를 세션에서 가져옴
     const lastModifiedTimestamp = getSessionStorage(
-      `${id}_${type}_lastModifiedTimestamp`
+      `${id}_${type}_${page}_lastModifiedTimestamp`
     );
 
     // 타임스템프가 있을때만 데이터가 최신인지 비교하기위한
@@ -70,7 +70,7 @@ CacheAxios.interceptors.response.use(
     // Last-Modified 헤더 세션 스토리지 업데이트
     if (serverLastModified) {
       addSessionStorage(
-        `${id}_${type}_lastModifiedTimestamp`,
+        `${id}_${type}_${page}_lastModifiedTimestamp`,
         serverLastModified
       );
     }

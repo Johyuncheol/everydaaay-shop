@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
+import { useContext } from "react";
+import { PageNationContext } from "../../../../../../shared/shared/lib/MyPageNation";
 
 interface itemRequire {
   user: string;
@@ -15,23 +17,15 @@ interface ReviewCardProps {
   item: itemRequire;
 }
 
-
 const ReviewCard: React.FC<ReviewCardProps> = ({ index, item }) => {
-  const [ isClicked, setIsClicked ] = useState(false);
-
-  /* 클릭시 카드의 전체 내용이 보이게 하는 함수 
-      현재 상태의 index가 현재 카드의 index와 같은경우 undefinded로 변경
-      다른경우 현재 카드 index로 설정 
-  */
-  const showAll = () => {
-    setIsClicked(!isClicked);
-  };
+  /* 반복문안에서 상태를 관리하기위한 컨텍스트 */
+  const context = useContext(PageNationContext);
 
   return (
     <ReviewCardArticle
       key={index}
-      onClick={() => showAll()}
-      state={isClicked} // 현재 카드가 클릭된 카드인지확인
+      onClick={() => context?.func(index)}
+      state={context?.cardState[index] ?? false} // 현재 카드가 클릭된 카드인지확인
     >
       <div className="header">
         <div>
@@ -62,8 +56,8 @@ const ReviewCardArticle = styled.div<{ state: boolean }>`
   border-bottom: 1px solid black;
   padding: 10px 0;
 
-  height:${(props) => (props.state ? "" : "10rem")};
-  
+  height: ${(props) => (props.state ? "" : "10rem")};
+
   cursor: pointer;
   span {
     word-break: break-all;

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import PagenationHeader from "../../../components/pagenation/header/PagenationHeader";
 import { getReview } from "../../../api/Detail";
 import ReviewCard from "../../../components/pagenation/card/ReviewCard";
@@ -7,6 +7,7 @@ import { usePagination } from "../../../../../../shared/shared/hooks/usePageNati
 import { ShowDataComponent } from "../../../../../../shared/shared/lib/MyPageNation";
 import { PageNumNavComponent } from "../../../../../../shared/shared/lib/MyPageNation";
 import NonItemCard from "../../../components/pagenation/card/NonItemCard";
+import { PageNationContextProvider } from "../../../../../../shared/shared/lib/MyPageNation";
 
 /* 리뷰 요청결과 데이터 타입 */
 interface reviewRequire {
@@ -32,16 +33,40 @@ const ReviewPageNation: React.FC<{ productID: string }> = ({ productID }) => {
     numOfShow
   );
 
+  const [isClicked, setIsClicked] = useState<Record<number, any>>({});
+
+  /* 클릭아이템 초기값 설정 */
+  useEffect(() => {
+    setIsClicked(() => {
+      const initialState: Record<number, any> = {};
+      for (let i = 0; i <= paginationResult.showData.length; i++) {
+        initialState[i] = false;
+      }
+      return initialState;
+    });
+  }, [paginationResult.showData]);
+
+  /* 클릭시 카드의 전체 내용이 보이게 하는 함수*/
+  const showDetail = (index: number) => {
+    setIsClicked((prevIsHide) => ({
+      ...prevIsHide,
+      [index]: !prevIsHide[index],
+    }));
+  };
+
   return (
     /* 페이지네이션 Outlayer 레이아웃 */
     <PagenationHeader title={"리뷰"}>
       {paginationResult.showData.length ? (
         <>
-          {/* 페이지네이션 반복되는 카드 구역 */}
-          <ShowDataComponent
-            showData={paginationResult.showData}
-            renderCard={ReviewCard}
-          />
+          {/* 상태 변경을 처리하기위한 컨텍스트 */}
+          <PageNationContextProvider cardState={isClicked} func={showDetail}>
+            {/* 페이지네이션 반복되는 카드 구역 */}
+            <ShowDataComponent
+              showData={paginationResult.showData}
+              renderCard={ReviewCard}
+            />
+          </PageNationContextProvider>
 
           {/* 페이지네이션 숫자 네비게이터 구역 */}
           <PageNumNavComponent

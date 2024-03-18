@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
+import { useContext } from "react";
+import { PageNationContext } from "../../../../../../shared/shared/lib/MyPageNation";
 
 interface itemRequire {
   owner: string;
@@ -15,19 +17,8 @@ interface AskCardProps {
 }
 
 const AskCard: React.FC<AskCardProps> = ({ index, item }) => {
-  const [isHide, setIsHide] = useState(true);
-
-  /* 비밀번호 입력값을 통해 현재카드의 상태 변경 함수
-    현재카드의 비밀번호와 입력값이 같으면 상태를 true로 변경
-  */
-  const inputPassword = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    password: string
-  ) => {
-    if (e.target.value === password) {
-      setIsHide(false);
-    }
-  };
+  /* 반복문안에서 상태를 관리하기위한 컨텍스트 */
+  const context = useContext(PageNationContext); 
 
   return (
     <AskCardArticle className="review">
@@ -43,12 +34,12 @@ const AskCard: React.FC<AskCardProps> = ({ index, item }) => {
       </div>
 
       <div>
-        {isHide ? (
+        {context?.cardState[index] ? (
           <div className="Password">
             비밀번호 :
             <input
               type="text"
-              onChange={(e) => inputPassword(e, item.password)}
+              onChange={(e) => context.func(e, item.password, index)}
             />
           </div>
         ) : (
