@@ -1,4 +1,4 @@
-import React from "react";
+import React, { createContext } from "react";
 
 //페이지네이션 numNav를 위한 타입
 interface numNavProps {
@@ -8,7 +8,6 @@ interface numNavProps {
   movePageBtnHandler: (type: string) => void;
 }
 
-
 /* 페이지네이션 훅데이터의 결과 중 현재 보여줄 데이터(showData) 배열 타입 
 제네릭을 사용해서 타입의 입력을 받음 
 */
@@ -16,7 +15,6 @@ interface ShowDataComponentProps<T> {
   showData: T[];
   renderCard: ({ index, item }: { index: number; item: T }) => React.ReactNode;
 }
-
 
 /* 페이지네이션의 카드들을 출력해주는 컴포넌트를 받는 구조 */
 export const ShowDataComponent = <T extends {}>({
@@ -35,7 +33,6 @@ export const ShowDataComponent = <T extends {}>({
   </>
 );
 
-
 /* 페이지네이션 PageNumNav를 위한 타입 */
 interface PageNumNavComponentProps {
   pageNums: number[];
@@ -49,7 +46,6 @@ interface PageNumNavComponentProps {
     movePageBtnHandler,
   }: numNavProps) => React.ReactNode;
 }
-
 
 /* 페이지네이션의 PageNumNav를 출력해주는 컴포넌트를 받는 구조 */
 export const PageNumNavComponent = ({
@@ -69,3 +65,30 @@ export const PageNumNavComponent = ({
   </>
 );
 
+/* 페이지네이션 훅데이터의 결과 중 현재 보여줄 데이터(showData) 배열 타입 
+제네릭을 사용해서 타입의 입력을 받음 
+*/
+interface PageNationContextProps {
+  cardState: Record<number, boolean>;
+  children?: React.ReactNode;
+  func: (...args: any) => void;
+}
+
+
+//페이지네이션 내부 카드에서 상태를 관리하기위한 컨텍스트 
+export const PageNationContext = createContext<PageNationContextProps | undefined>(
+  undefined
+);
+PageNationContext.displayName = "PageNationContext";
+
+export const PageNationContextProvider: React.FC<PageNationContextProps> = ({
+  cardState,
+  children,
+  func,
+}) => {
+  return (
+    <PageNationContext.Provider value={{ cardState, func }}>
+      {children}
+    </PageNationContext.Provider>
+  );
+};
