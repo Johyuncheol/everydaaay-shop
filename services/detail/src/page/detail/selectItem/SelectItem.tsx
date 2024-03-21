@@ -5,6 +5,7 @@ import { RootState } from "../../../redux/config";
 import AlertModalCard from "../../../../../../shared/shared/components/modalCard/AlertModalCard";
 import { useModal } from "../../../../../../shared/shared/hooks/useModal";
 import { putInShoppingBagAPI } from "../../../api/ShoppingBag";
+import { getCookie } from "../../../../../../shared/shared/utill/cookie";
 
 /* 상품의 옵션 타입 */
 interface optionItem {
@@ -31,6 +32,7 @@ const ItemSelection: React.FC<{ data: dataRequire }> = ({ data }) => {
     Record<string, string>
   >({});
 
+
   /* 모든 옵션이 선택되어 저장된 아이탬 상태 */
   const [selectedItems, setSelectedItems] = useState<Record<string, any>[]>([]);
 
@@ -39,9 +41,6 @@ const ItemSelection: React.FC<{ data: dataRequire }> = ({ data }) => {
 
   /* 장바구니/구매시 띄울 모달 내용상태 */
   const [modalState, setModalState] = useState<string>("");
-
-  /* 로그인한 유저인지 확인 */
-  const userInfo = useSelector((state: RootState) => state.User);
 
   /* 모달 생성 */
   const AlertModal = useModal({ isOpen: false });
@@ -166,8 +165,8 @@ const ItemSelection: React.FC<{ data: dataRequire }> = ({ data }) => {
 
   /* 장바구니에 담기 버튼 클릭시 */
   const AddToShoppingBag = () => {
-    /* 로그인 안되어있으먄 로그인 창으로 */
-    if (userInfo.name === null) return (window.location.href = "https://auth.everydaaay.com/auth/login");
+    /* 로그인 안되어있으면 로그인 창으로 */
+    if (getCookie("name") === null) return (window.location.href = "https://auth.everydaaay.com/auth/login");
 
     /* 고른게 없을 떄 */
     if (selectedItems.length === 0) return;
