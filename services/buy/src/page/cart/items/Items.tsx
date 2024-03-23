@@ -117,6 +117,7 @@ const Items: React.FC<ItemsProps> = ({
           <div className="layout" key={index}>
             <div className="item">
               <input
+                data-testid={`checkbox-${index}`}
                 type="checkbox"
                 className="checkbox"
                 checked={checkedItem[index]}
@@ -139,15 +140,19 @@ const Items: React.FC<ItemsProps> = ({
                 </p>
               </div>
             </div>
-            <div className="item">{item.count}</div>
+            <div className="item" data-testid={`itemNums-${index}`}>
+              {item.count}
+            </div>
             <div className="item">
               <button
+                data-testid={`decreaseBtn-${index}`}
                 onClick={() => ChangeNumOfItem({ index: index, type: "down" })}
               >
                 ▼
               </button>
-              {item.orderPrice}
+              <span data-testid={`orderPrice-${index}`}>{item.orderPrice}</span>
               <button
+                data-testid={`increaseBtn-${index}`}
                 onClick={() => ChangeNumOfItem({ index: index, type: "up" })}
               >
                 ▲
@@ -159,7 +164,11 @@ const Items: React.FC<ItemsProps> = ({
         );
       })}
 
-      <button className="del" onClick={handleDeleteItems}>
+      <button
+        className="del"
+        data-testid={`deleteButton`}
+        onClick={handleDeleteItems}
+      >
         선택상품삭제
       </button>
     </MyBagSection>
