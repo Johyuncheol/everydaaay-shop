@@ -5,7 +5,7 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test-detail": "cd services/detail && yarn test",
     "auth": "npm start --workspace services/auth",
     "buy": "npm start --workspace services/buy",
     "category": "npm start --workspace services/category",
