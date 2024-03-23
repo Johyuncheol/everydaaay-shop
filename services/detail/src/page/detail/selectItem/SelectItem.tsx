@@ -32,7 +32,6 @@ const ItemSelection: React.FC<{ data: dataRequire }> = ({ data }) => {
     Record<string, string>
   >({});
 
-
   /* 모든 옵션이 선택되어 저장된 아이탬 상태 */
   const [selectedItems, setSelectedItems] = useState<Record<string, any>[]>([]);
 
@@ -119,6 +118,7 @@ const ItemSelection: React.FC<{ data: dataRequire }> = ({ data }) => {
           count: 1,
           id: data.id,
           imgSrc: data.imgSrc,
+          alt:data.alt,
           name: data.name,
           deliveryFee: data.deliveryFee,
           price: data.price,
@@ -166,7 +166,8 @@ const ItemSelection: React.FC<{ data: dataRequire }> = ({ data }) => {
   /* 장바구니에 담기 버튼 클릭시 */
   const AddToShoppingBag = () => {
     /* 로그인 안되어있으면 로그인 창으로 */
-    if (getCookie("name") === null) return (window.location.href = "https://auth.everydaaay.com/auth/login");
+    if (getCookie("name") === null)
+      return (window.location.href = "https://auth.everydaaay.com/auth/login");
 
     /* 고른게 없을 떄 */
     if (selectedItems.length === 0) return;
@@ -205,30 +206,30 @@ const ItemSelection: React.FC<{ data: dataRequire }> = ({ data }) => {
 
       {/* 옵션 셀렉트 박스 */}
       {data.options.map((option, index) => (
-        <div key={option.label}>
-          <select
-            value={selectedOptions[option.label] || ""}
-            onChange={(e) => handleOptionChange(option.label, e)}
-          >
-            {index !== 0 &&
-            selectedOptions[data.options[index - 1].label] === undefined ? (
-              /* 앞선 옵션이 선택되지않았을 때 */
-              <option value="">{`${
-                data.options[index - 1].label
-              }을 선택해주세요`}</option>
-            ) : (
-              /* 앞선 옵션이 선택되어있을 때 */
-              <>
-                <option value="">Select {option.label}</option>
-                {option.values.map((value) => (
-                  <option key={value} value={value}>
-                    {value}
-                  </option>
-                ))}
-              </>
-            )}
-          </select>
-        </div>
+        <select
+          key={index}
+          data-testid={`option-${index}`}
+          value={selectedOptions[option.label] || ""}
+          onChange={(e) => handleOptionChange(option.label, e)}
+        >
+          {index !== 0 &&
+          selectedOptions[data.options[index - 1].label] === undefined ? (
+            /* 앞선 옵션이 선택되지않았을 때 */
+            <option value="">{`${
+              data.options[index - 1].label
+            }을 선택해주세요`}</option>
+          ) : (
+            /* 앞선 옵션이 선택되어있을 때 */
+            <>
+              <option value="">Select {option.label}</option>
+              {option.values.map((value) => (
+                <option key={value} value={value}>
+                  {value}
+                </option>
+              ))}
+            </>
+          )}
+        </select>
       ))}
 
       {/* 저장된 아이탬 출력 */}
@@ -252,14 +253,16 @@ const ItemSelection: React.FC<{ data: dataRequire }> = ({ data }) => {
                 {/* 수량 변경 버튼 */}
                 <div>
                   <button
+                    data-testid={`decreaseBtn-${index}`}
                     onClick={() =>
                       handleChangeCount({ type: "sub", index: index })
                     }
                   >
                     ▼
                   </button>
-                  {item.count}
+                  <span data-testid={`itemNums-${index}`}>{item.count}</span>
                   <button
+                    data-testid={`increaseBtn-${index}`}
                     onClick={() =>
                       handleChangeCount({ type: "plus", index: index })
                     }
@@ -268,7 +271,12 @@ const ItemSelection: React.FC<{ data: dataRequire }> = ({ data }) => {
                   </button>
                 </div>
 
-                <button onClick={() => handleDeleteItem(index)}>x</button>
+                <button
+                  data-testid={`deleteButton-${index}`}
+                  onClick={() => handleDeleteItem(index)}
+                >
+                  x
+                </button>
               </div>
             );
           })}
@@ -286,7 +294,11 @@ const ItemSelection: React.FC<{ data: dataRequire }> = ({ data }) => {
 
       {/* 장바구니/구매하기 버튼 */}
       <div className="btnWrap">
-        <Button state={false} onClick={AddToShoppingBag}>
+        <Button
+          data-testid={`save-cart`}
+          state={false}
+          onClick={AddToShoppingBag}
+        >
           장바구니
         </Button>
         <Button state={true} onClick={() => alert("준비중입니다")}>
