@@ -48,11 +48,6 @@ const CartPage = () => {
     totalPrice: 0,
   });
 
-  // 장바구니 데이터 변경시 세션의 데이터도 변경
-  useEffect(() => {
-    data.length !== 0 && addSessionStorage("shoppingBag", data);
-  }, [data]);
-
   // 장바구니 데이터 가져오기
   const GetBagData = async () => {
     setIsLoading(true); // 로딩 상태를 true로 설정
@@ -70,24 +65,29 @@ const CartPage = () => {
     setIsLoading(false); // 로딩 상태를 false로 설정 (로딩 완료)
   };
 
-
-  useEffect(()=>{
-
-  },[])
-
   useEffect(() => {
     GetBagData();
   }, []);
 
+  // 장바구니 데이터 변경시 세션의 데이터도 변경
+  useEffect(() => {
+    if (JSON.stringify(data) !== JSON.stringify(firstData)) {
+      setIsChange(true);
+    } else {
+      setIsChange(false);
+    }
+    data.length !== 0 && addSessionStorage("shoppingBag", data);
+  }, [data]);
+
   // 페이지가언로드, 컴포넌트가 언마운트 될 때 세션의 정보를 서버에 저장요청 보냄
   useEffect(() => {
-    const handleBeforeUnload = () => {
+    const handleBeforeUnload = async() => {
       //장바구니 데이터가 변경이 없으면
       if (!isChange) return;
 
       //변경있으면 서버로 업데이트
       const newData = getSessionStorage("shoppingBag");
-      putInShoppingBagAPI(newData);
+      await putInShoppingBagAPI(newData);
     };
 
     if (isChange) {
@@ -99,18 +99,6 @@ const CartPage = () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
   }, [isChange]);
-
-  useEffect(() => {
-    // 변경된 정보가 있는지 확인, 객체라 순서때문에 반복문사용
-    for (let i = 0; i < data.length; i++) {
-      // 다를 때
-      if (JSON.stringify(data[i]) !== JSON.stringify(firstData[i])) {
-        setIsChange(true); // 변경이 있으면 isChange 상태를 true로 업데이트
-        return;
-      }
-    }
-    setIsChange(false); // 변경이 없으면 isChange 상태를 false로 업데이트
-  }, [data]);
 
   //선택아이탬 변경시 종합정보 변경
   useEffect(() => {
