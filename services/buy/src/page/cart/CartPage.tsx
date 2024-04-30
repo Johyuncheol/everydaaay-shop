@@ -88,6 +88,7 @@ const CartPage = () => {
       //변경있으면 서버로 업데이트
       const newData = getSessionStorage("shoppingBag");
       await putInShoppingBagAPI(newData);
+      addSessionStorage("shoppingBag", []);
     };
 
     if (isChange) {
