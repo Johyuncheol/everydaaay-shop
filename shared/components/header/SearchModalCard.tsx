@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import styled from "styled-components";
 import { searchAPI } from "../../api/Search";
 interface SearchModalCardRequire {
@@ -13,7 +13,7 @@ const SearchModal: React.FC<SearchModalCardRequire> = ({ onClose }) => {
   const [searchInput, setSearchInput] = useState("");
   const [findData, setfindData] = useState<findRequire[]>([]);
 
-  let timeoutId: ReturnType<typeof setTimeout>;
+  const timeoutIdRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const changeInputAndSearch = async (
     e: React.ChangeEvent<HTMLInputElement>
@@ -21,12 +21,12 @@ const SearchModal: React.FC<SearchModalCardRequire> = ({ onClose }) => {
     setSearchInput(e.target.value);
 
     // 이전에 설정된 timeout이 있다면 제거
-    if (timeoutId) {
-      clearTimeout(timeoutId);
+    if (timeoutIdRef.current) {
+      clearTimeout(timeoutIdRef.current);
     }
 
     // 새로운 timeout 설정
-    timeoutId = setTimeout(async () => {
+    timeoutIdRef.current = setTimeout(async () => {
       if (!e.target.value) {
         setfindData([]);
         return;
