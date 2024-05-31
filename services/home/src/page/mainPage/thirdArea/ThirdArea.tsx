@@ -7,7 +7,7 @@ import SkeleltionThirdArea from "./skeleton/SkeletonThirdArea";
 import SmallCarousel from "../../../components/carousel/smallCrousel/index";
 import CarouselHeader from "../../../components/carousel/elements/header/CarouselHeader";
 
-interface Item1 {
+interface BannerItemsType {
   id: number;
   imgSrc: string;
   alt: string;
@@ -16,10 +16,7 @@ interface Item1 {
   price: number;
 }
 
-interface SmallCarouselProps {
-  array: Item1[];
-  name: string;
-
+interface BannerType {
   detail: string;
   imgSrc: string;
   alt: string;
@@ -29,8 +26,13 @@ interface SmallCarouselProps {
   aspectRatio: string;
 }
 
+interface SmallCarouselProps {
+  BannerItems: BannerItemsType[];
+  Banner: BannerType[];
+}
+
 interface thirdDataType {
-  Exhibition: SmallCarouselProps[];
+  Exhibition: SmallCarouselProps;
 }
 
 const ThirdArea: React.FC = () => {
@@ -49,15 +51,11 @@ const ThirdArea: React.FC = () => {
   return (
     <ItemBox ref={thirdAreaRef}>
       {thirdAreaData ? (
-        thirdAreaData.Exhibition.map((item, index) => {
-          return (
-            <div key={index}>
-              <FigureLinkBox data={item} />
-              <CarouselHeader title={"관련 제품"} path={"/"} />
-              <SmallCarousel adata={item.array} />
-            </div>
-          );
-        })
+        <section>
+          <FigureLinkBox data={thirdAreaData?.Exhibition.Banner[0]} />
+          <CarouselHeader title={"관련 제품"} path={"/"} />
+          <SmallCarousel adata={thirdAreaData.Exhibition.BannerItems} />
+        </section>
       ) : (
         <SkeleltionThirdArea />
       )}
@@ -67,7 +65,7 @@ const ThirdArea: React.FC = () => {
 
 export default ThirdArea;
 
-const ItemBox = styled.div`
+const ItemBox = styled.article`
   display: flex;
   flex-direction: column;
 
