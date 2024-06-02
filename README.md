@@ -2,6 +2,7 @@
 
 ### 링크:
 
+### AWS 프리티어 종료로 인한 배포사이트 사용 불가 (6월 6일 수정 예정)
 > - 배포:  <a href='https://everydaaay.com/'>everydaaay_shop</a>
 
 
