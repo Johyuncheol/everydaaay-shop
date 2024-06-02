@@ -6,6 +6,10 @@
 > - 배포:  <a href='https://everydaaay.com/'>everydaaay_shop</a>
 
 
+https://github.com/Johyuncheol/everydaaay-shop/assets/51200912/7763ad77-6894-4538-905c-fe64468dfbfe
+
+
+
 > - <a href='https://www.notion.so/Everyday-13600f7a7bbc4d70bc8c4c90c23aa423'>프로젝트 관리 대시보드</a>
 
   
